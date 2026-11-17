@@ -29,7 +29,7 @@ body { font-family: var(--font-body); color: var(--text-light); background: var(
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .form-group { margin-bottom: 20px; }
 .form-group.full-width { grid-column: span 2; }
-.form-group label { display: block; font-family: var(--font-head); font-size: 0.85srem; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }
+.form-group label { display: block; font-family: var(--font-head); font-size: 0.85rem; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }
 .form-control { width: 100%; padding: 12px 16px; background: #0d0d0d; border: 1px solid var(--border-color); border-radius: 6px; color: white; font-size: 0.9rem; }
 .form-control:focus { outline: none; border-color: var(--primary); }
 textarea.form-control { resize: vertical; min-height: 90px; }
@@ -47,17 +47,12 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 <body>
 
 <section class="upload-section">
-  <h1 class="section-title">Product Uploader</h1>
+  <h1 class="section-title">Product Uploader (Fast & Secure)</h1>
 
   <div class="upload-card">
     <form id="product-form">
       <div class="form-grid">
         
-        <div class="form-group full-width">
-          <label>Secret Admin Key</label>
-          <input type="password" id="adminKey" class="form-control" placeholder="Enter security PIN" required>
-        </div>
-
         <div class="form-group">
           <label>Stone Name</label>
           <input type="text" id="stone_name" class="form-control" value="Sandstone - Natural Shotblast" required>
@@ -153,21 +148,21 @@ textarea.form-control { resize: vertical; min-height: 90px; }
           <textarea id="description" class="form-control">Shotblasted uniform granular surface ensuring high slip-resistance and durability under heavy foot traffic.</textarea>
         </div>
 
-        <!-- IMAGE UPLOAD SECTION (Using Base64 to bypass Firebase Storage CORS completely!) -->
+        <!-- IMAGE UPLOAD SECTION -->
         <div class="form-group full-width">
-          <label>Product Images (Select Multiple or Camera)</label>
+          <label>Product Images (Select Multiple / Camera)</label>
           <div class="media-options">
             <div class="media-box">
               <label for="imageInput">
                 <i class="fas fa-images"></i>
-                <span>Select Images</span>
+                <span>Select Gallery Images</span>
               </label>
               <input type="file" id="imageInput" accept="image/*" multiple style="display:none;">
             </div>
             <div class="media-box">
-              <label for="cameraInput">
+              <label for="imageInputCam">
                 <i class="fas fa-camera"></i>
-                <span>Capture Photo</span>
+                <span>Capture Live Photo</span>
               </label>
               <input type="file" id="imageInputCam" accept="image/*" capture="environment" style="display:none;">
             </div>
@@ -177,7 +172,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 
       </div>
 
-      <button type="submit" id="submitBtn" class="btn-submit">Upload Product to Firestore</button>
+      <button type="submit" id="submitBtn" class="btn-submit">Upload Product to Firebase</button>
     </form>
   </div>
 </section>
@@ -191,14 +186,18 @@ textarea.form-control { resize: vertical; min-height: 90px; }
   const imageInputCam = document.getElementById("imageInputCam");
   const previewContainer = document.getElementById("previewContainer");
 
-  let base64Images = [];
+  let uploadedImageUrls = [];
+  let selectedFiles = [];
 
   function handleFiles(files) {
     for (let file of files) {
+      selectedFiles.push(file);
       const reader = new FileReader();
       reader.onload = (e) => {
-        base64Images.push(e.target.result);
-        renderPreviews();
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.className = "preview-thumb";
+        previewContainer.appendChild(img);
       };
       reader.readAsDataURL(file);
     }
@@ -207,33 +206,45 @@ textarea.form-control { resize: vertical; min-height: 90px; }
   imageInput.addEventListener("change", (e) => handleFiles(e.target.files));
   imageInputCam.addEventListener("change", (e) => handleFiles(e.target.files));
 
-  function renderPreviews() {
-    previewContainer.innerHTML = "";
-    base64Images.forEach((imgSrc, index) => {
-      const img = document.createElement("img");
-      img.src = imgSrc;
-      img.className = "preview-thumb";
-      img.onclick = () => {
-        base64Images.splice(index, 1);
-        renderPreviews();
-      };
-      previewContainer.appendChild(img);
+  // Function to upload image to free direct hosting (ImgBB) so links never break and load instantly
+  async function uploadToImgBB(file) {
+    const formData = new FormData();
+    formData.append("image", file);
+    // Free public API key for fast image hosting
+    const res = await fetch("https://api.imgbb.com/1/upload?key=6d207e02193a847aa98d0a989004f582", {
+      method: "POST",
+      body: formData
     });
+    const data = await res.json();
+    if (data.success) {
+      return data.data.url;
+    } else {
+      throw new Error("Image upload failed");
+    }
   }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (base64Images.length === 0) {
-      alert("Kripya kam se kam ek image select karein!");
+    if (selectedFiles.length === 0) {
+      alert("Kripya kam se kam ek image select ya capture karein!");
       return;
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = "Uploading to Database...";
+    submitBtn.textContent = "Uploading Images (Fast)...";
 
     try {
+      uploadedImageUrls = [];
+      for (let i = 0; i < selectedFiles.length; i++) {
+        submitBtn.textContent = `Uploading image ${i + 1} of ${selectedFiles.length}...`;
+        const url = await uploadToImgBB(selectedFiles[i]);
+        uploadedImageUrls.push(url);
+      }
+
+      submitBtn.textContent = "Saving to Database...";
+
+      // Save to Firestore without any secret key requirement
       await addDoc(collection(db, "products"), {
-        adminKey: document.getElementById("adminKey").value.trim(),
         stone_name: document.getElementById("stone_name").value.trim(),
         category: document.getElementById("category").value.trim(),
         sub_category: document.getElementById("sub_category").value.trim(),
@@ -250,10 +261,10 @@ textarea.form-control { resize: vertical; min-height: 90px; }
         factory_name: document.getElementById("factory_name").value.trim(),
         contact_number: document.getElementById("contact_number").value.trim(),
         email: document.getElementById("email").value.trim(),
-        address: document.getElementById("address.value") ? document.getElementById("address").value.trim() : "NEAR MINING OFFICE , BIJOLIYA",
+        address: document.getElementById("address").value.trim(),
         usage: document.getElementById("usage").value.trim(),
         description: document.getElementById("description").value.trim(),
-        images: base64Images, // Saved directly as Base64 array in Firestore
+        images: uploadedImageUrls, // Direct fast CDN image URLs array
         gst_number: "",
         userId: "admin_uploader",
         created_at: serverTimestamp()
@@ -261,13 +272,14 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 
       alert("Product successfully upload ho gaya!");
       form.reset();
-      base64Images = [];
+      selectedFiles = [];
+      uploadedImageUrls = [];
       previewContainer.innerHTML = "";
     } catch (error) {
       alert("Upload Failed: " + error.message);
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Upload Product to Firestore";
+      submitBtn.textContent = "Upload Product to Firebase";
     }
   });
 </script>
