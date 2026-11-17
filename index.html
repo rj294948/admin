@@ -239,7 +239,6 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 <script type="module">
   import { db, collection, addDoc, serverTimestamp } from "./firebase-config.js";
 
-  // Base64 ImgBB Uploader (Fast, direct URLs, never fails)
   async function uploadToImgBB(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -358,12 +357,16 @@ textarea.form-control { resize: vertical; min-height: 90px; }
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = "Uploading Product Images (Fast)...";
 
     try {
       let uploadedImageUrls = [];
       for (let i = 0; i < selectedProductFiles.length; i++) {
         submitBtn.textContent = `Uploading image ${i + 1} of ${selectedProductFiles.length}...`;
+        
+        if (i > 0) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
         const url = await uploadToImgBB(selectedProductFiles[i]);
         uploadedImageUrls.push(url);
       }
