@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #111; color: #eee; padding: 20px; }
+  .login-box { max-width: 400px; margin: 100px auto; background: #1a1a1a; padding: 40px; border-radius: 10px; text-align: center; }
+  .login-box h2 { color: #c7a97b; margin-bottom: 20px; }
+  .login-box input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 5px; }
+  .login-box button { width: 100%; padding: 12px; background: #c7a97b; border: none; color: #000; font-weight: bold; cursor: pointer; border-radius: 5px; }
+
+  .panel { max-width: 700px; margin: 0 auto; display: none; }
+  .panel h2 { color: #c7a97b; margin-bottom: 20px; text-align: center; }
+  .field { margin-bottom: 15px; }
+  .field label { display: block; margin-bottom: 5px; color: #aaa; font-size: 14px; }
+  .field input, .field select, .field textarea { width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: #fff; border-radius: 5px; }
+  .field textarea { height: 80px; resize: vertical; }
+  .field input[type="file"] { padding: 8px; }
+  .btn { padding: 12px 20px; background: #c7a97b; border: none; color: #000; font-weight: bold; cursor: pointer; border-radius: 5px; width: 100%; }
+  .btn:hover { background: #d4b88c; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .status { margin-top: 15px; padding: 10px; border-radius: 5px; text-align: center; font-size: 14px; display: none; }
+  .status.success { background: #1b5e20; color: #a5d6a7; display: block; }
+  .status.error { background: #b71c1c; color: #ef9a9a; display: block; }
+  .status.info { background: #1a237e; color: #9fa8da; display: block; }
+  .image-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .image-list img { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; border: 1px solid #333; }
+  .progress-bar { width: 100%; height: 6px; background: #222; border-radius: 3px; margin-top: 10px; overflow: hidden; display: none; }
+  .progress-fill { height: 100%; width: 0%; background: #c7a97b; transition: width 0.3s; }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-box" id="loginBox">
+  <h2>🔒 Admin Login</h2>
+  <input type="password" id="adminPass" placeholder="Enter admin password" onkeypress="if(event.key==='Enter')checkLogin()">
+  <button onclick="checkLogin()">Login</button>
+</div>
+
+<!-- ===== ADMIN PANEL ===== -->
+<div class="panel" id="adminPanel">
+  <h2>📦 Add Product</h2>
+
+  <div class="field">
+    <label>Stone Name *</label>
+    <input type="text" id="stoneName" placeholder="e.g. Raj Green Sandstone">
+  </div>
+
+  <div class="field">
+    <label>Category *</label>
+    <select id="category">
+      <option value="sandstone">Sandstone</option>
+      <option value="kota">Kota Stone</option>
+      <option value="granite">Granite</option>
+      <option value="marble">Marble</option>
+      <option value="dholpur">Dholpur</option>
+      <option value="tiles">Tiles</option>
+      <option value="mandana">Mandana</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Sub-category</label>
+    <input type="text" id="subCategory" placeholder="e.g. Slab, Tile">
+  </div>
+
+  <div class="field">
+    <label>Color</label>
+    <input type="text" id="color" placeholder="e.g. Green, Brown, White">
+  </div>
+
+  <div class="field">
+    <label>Description</label>
+    <textarea id="description" placeholder="Product description..."></textarea>
+  </div>
+
+  <div class="field">
+    <label>Product Images (multiple allowed) *</label>
+    <input type="file" id="imageInput" accept="image/*" multiple onchange="previewImages(event)">
+    <div class="image-list" id="imageList"></div>
+    <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <button class="btn" id="addBtn" onclick="addProduct()">Add Product to Firebase</button>
+  <div class="status" id="status"></div>
+</div>
+
+<script type="module">
+// ===== Tumhari existing config file se sab import =====
+import {
+  db,
+  collection,
+  addDoc,
+  serverTimestamp
+} from './firebase-config.js';
+
+// ===== Admin Settings =====
+const CLOUD_NAME = "YOUR_CLOUDINARY_CLOUD_NAME";     // ⚠️ apna Cloudinary cloud name daalo
+const UPLOAD_PRESET = "stone_admin_upload";          // ⚠️ apna unsigned preset naam daalo
+const ADMIN_PASSWORD = "mySecret123";                 // ⚠️ apna password daalo
+
+let selectedFiles = [];
+
+// ===== Login =====
+window.checkLogin = function() {
+  const pass = document.getElementById('adminPass').value;
+  if (pass === ADMIN_PASSWORD) {
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+  } else {
+    alert('❌ Wrong password!');
+  }
+};
+
+// ===== Image Preview =====
+window.previewImages = function(event) {
+  selectedFiles = Array.from(event.target.files);
+  const list = document.getElementById('imageList');
+  list.innerHTML = '';
+
+  selectedFiles.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      list.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
+// ===== Cloudinary Upload =====
+async function uploadToCloudinary(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', UPLOAD_PRESET);
+
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+    method: 'POST',
+    body: formData
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || 'Cloudinary upload failed');
+  }
+  const data = await res.json();
+  return data.secure_url;
+}
+
+// ===== Add Product =====
+window.addProduct = async function() {
+  const statusEl = document.getElementById('status');
+  const btn = document.getElementById('addBtn');
+  const progressBar = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
+
+  statusEl.className = 'status';
+  statusEl.textContent = '';
+
+  const name = document.getElementById('stoneName').value.trim();
+  const category = document.getElementById('category').value;
+  const subCategory = document.getElementById('subCategory').value.trim();
+  const color = document.getElementById('color').value.trim();
+  const description = document.getElementById('description').value.trim();
+  const files = document.getElementById('imageInput').files;
+
+  // Validation
+  if (!name || !files.length) {
+    statusEl.className = 'status error';
+    statusEl.textContent = '❌ Stone Name aur kam se kam 1 image required hai!';
+    return;
+  }
+
+  btn.disabled = true;
+  progressBar.style.display = 'block';
+  progressFill.style.width = '0%';
+
+  try {
+    // ===== Step 1: Upload images to Cloudinary =====
+    statusEl.className = 'status info';
+    statusEl.textContent = `⏳ Uploading ${files.length} image(s) to Cloudinary...`;
+
+    const imageUrls = [];
+    for (let i = 0; i < files.length; i++) {
+      statusEl.textContent = `⏳ Uploading image ${i + 1}/${files.length}...`;
+      const url = await uploadToCloudinary(files[i]);
+      imageUrls.push(url);
+      progressFill.style.width = `${Math.round(((i + 1) / files.length) * 70)}%`;
+    }
+
+    // ===== Step 2: Save to Firestore =====
+    statusEl.textContent = '⏳ Saving product to Firebase...';
+    progressFill.style.width = '90%';
+
+    await addDoc(collection(db, "products"), {
+      stone_name: name,
+      category: category,
+      sub_category: subCategory,
+      color: color,
+      description: description,
+      images: imageUrls,
+      created_at: serverTimestamp()
+    });
+
+    progressFill.style.width = '100%';
+
+    statusEl.className = 'status success';
+    statusEl.textContent = `✅ Product "${name}" added successfully! (${imageUrls.length} image(s))`;
+
+    // Reset form
+    document.getElementById('stoneName').value = '';
+    document.getElementById('subCategory').value = '';
+    document.getElementById('color').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('imageInput').value = '';
+    document.getElementById('imageList').innerHTML = '';
+    selectedFiles = [];
+
+    setTimeout(() => {
+      progressBar.style.display = 'none';
+      progressFill.style.width = '0%';
+    }, 2000);
+
+  } catch (err) {
+    console.error(err);
+    statusEl.className = 'status error';
+    statusEl.textContent = '❌ Error: ' + err.message;
+    progressBar.style.display = 'none';
+  } finally {
+    btn.disabled = false;
+  }
+};
+</script>
+</body>
+</html>
