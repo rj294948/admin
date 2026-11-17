@@ -64,7 +64,6 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 </head>
 <body>
 
-<!-- Navigation Back to Home -->
 <a href="index.html" class="admin-link-btn">
   <i class="fas fa-home"></i> Back to Home
 </a>
@@ -102,7 +101,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
           <div class="preview-container" id="bannerPreviewContainer"></div>
         </div>
       </div>
-      <button type="submit" id="bannerBtn" class="btn-submit">Upload to 'hero_images' Collection</button>
+      <button type="submit" id="bannerBtn" class="btn-submit">Upload Banner to Firebase</button>
     </form>
   </div>
 
@@ -111,103 +110,83 @@ textarea.form-control { resize: vertical; min-height: 90px; }
     <div class="card-subtitle"><i class="fas fa-boxes"></i> Upload Stone Products</div>
     <form id="product-form">
       <div class="form-grid">
-        
         <div class="form-group">
           <label>Stone Name</label>
           <input type="text" id="stone_name" class="form-control" value="Sandstone - Blasted Brushed" required>
         </div>
-
         <div class="form-group">
           <label>Category</label>
           <input type="text" id="category" class="form-control" value="Sand Stone" required>
         </div>
-
         <div class="form-group">
           <label>Sub Category</label>
           <input type="text" id="sub_category" class="form-control" value="Slabs / Tiles" required>
         </div>
-
         <div class="form-group">
           <label>Type</label>
           <input type="text" id="type" class="form-control" value="Natural" required>
         </div>
-
         <div class="form-group">
           <label>Finish</label>
           <input type="text" id="finish" class="form-control" value="Blasted Brushed" required>
         </div>
-
         <div class="form-group">
           <label>Color</label>
           <input type="text" id="color" class="form-control" value="Blasted Brushed" required>
         </div>
-
         <div class="form-group">
           <label>Price (₹)</label>
           <input type="number" id="price" class="form-control" value="98" required>
         </div>
-
         <div class="form-group">
           <label>Price Unit</label>
           <input type="text" id="price_unit" class="form-control" value="sqft" required>
         </div>
-
         <div class="form-group">
           <label>Size</label>
           <input type="text" id="size" class="form-control" value="Standard / Custom">
         </div>
-
         <div class="form-group">
           <label>Thickness</label>
           <input type="text" id="thickness" class="form-control" value="20-40 mm">
         </div>
-
         <div class="form-group">
           <label>Density</label>
           <input type="text" id="density" class="form-control" value="2.4 - 2.6 g/cm³">
         </div>
-
         <div class="form-group">
           <label>Compressive Strength</label>
           <input type="text" id="compressive_strength" class="form-control" value="1900 kg/cm²">
         </div>
-
         <div class="form-group">
           <label>Water Absorption</label>
           <input type="text" id="water_absorption" class="form-control" value="1.5 - 2.5%">
         </div>
-
         <div class="form-group">
           <label>Factory Name</label>
           <input type="text" id="factory_name" class="form-control" value="RJ Sand Stones">
         </div>
-
         <div class="form-group">
           <label>Contact Number</label>
           <input type="text" id="contact_number" class="form-control" value="+91 7737740207">
         </div>
-
         <div class="form-group">
           <label>Email</label>
           <input type="email" id="email" class="form-control" value="ravijain236129@gmail.com">
         </div>
-
         <div class="form-group full-width">
           <label>Address</label>
           <input type="text" id="address" class="form-control" value="NEAR MINING OFFICE , BIJOLIYA">
         </div>
-
         <div class="form-group full-width">
           <label>Usage / Applications</label>
           <input type="text" id="usage" class="form-control" value="Interior Feature Floors, Modern Patios, Walkways">
         </div>
-
         <div class="form-group full-width">
           <label>Description</label>
           <textarea id="description" class="form-control">Blasted and subsequently brushed to soften the textured feel while accentuating natural stone details.</textarea>
         </div>
 
-        <!-- PRODUCT IMAGES UPLOAD -->
         <div class="form-group full-width">
           <label>Product Images (Multiple Gallery / Live Camera)</label>
           <div class="media-options">
@@ -230,8 +209,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
         </div>
 
       </div>
-
-      <button type="submit" id="submitBtn" class="btn-submit">Upload Product to 'products' Collection</button>
+      <button type="submit" id="submitBtn" class="btn-submit">Upload Product to Firebase</button>
     </form>
   </div>
 </section>
@@ -239,23 +217,46 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 <script type="module">
   import { db, collection, addDoc, serverTimestamp } from "./firebase-config.js";
 
-  // Keyless Free Image Uploader (Catbox API - never fails, no API key required)
-  async function uploadToImageHosting(file) {
-    const formData = new FormData();
-    formData.append("reqtype", "fileupload");
-    formData.append("fileToUpload", file);
+  // Helper function to compress image and convert to Base64 so it fits easily in Firebase
+  function compressImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1000;
+          const MAX_HEIGHT = 1000;
+          let width = img.width;
+          let height = img.height;
 
-    const res = await fetch("https://catbox.moe/user/api.php", {
-      method: "POST",
-      body: formData
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Compress to JPEG with 0.7 quality
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(dataUrl);
+        };
+        img.onerror = (err) => reject(err);
+        img.src = event.target.result;
+      };
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
     });
-    
-    const url = await res.text();
-    if (url && url.startsWith("http")) {
-      return url.trim();
-    } else {
-      throw new Error("Image upload failed");
-    }
   }
 
   // --- 1. HERO BANNER UPLOAD LOGIC ---
@@ -290,18 +291,18 @@ textarea.form-control { resize: vertical; min-height: 90px; }
     }
 
     bannerBtn.disabled = true;
-    bannerBtn.textContent = "Uploading Banner Image...";
+    bannerBtn.textContent = "Processing & Saving Banner...";
 
     try {
-      const imageUrl = await uploadToImageHosting(selectedBannerFile);
+      const base64Image = await compressImage(selectedBannerFile);
 
       await addDoc(collection(db, "hero_images"), {
         title: document.getElementById("bannerTitle").value.trim(),
-        imageUrl: imageUrl,
+        imageUrl: base64Image,
         created_at: serverTimestamp()
       });
 
-      alert("Hero Banner successfully 'hero_images' collection me upload ho gaya!");
+      alert("Hero Banner successfully Firebase me save ho gaya!");
       bannerForm.reset();
       selectedBannerFile = null;
       bannerPreviewContainer.innerHTML = "";
@@ -309,7 +310,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
       alert("Banner Upload Failed: " + error.message);
     } finally {
       bannerBtn.disabled = false;
-      bannerBtn.textContent = "Upload to 'hero_images' Collection";
+      bannerBtn.textContent = "Upload Banner to Firebase";
     }
   });
 
@@ -351,14 +352,9 @@ textarea.form-control { resize: vertical; min-height: 90px; }
     try {
       let uploadedImageUrls = [];
       for (let i = 0; i < selectedProductFiles.length; i++) {
-        submitBtn.textContent = `Uploading image ${i + 1} of ${selectedProductFiles.length}...`;
-        
-        if (i > 0) {
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-
-        const url = await uploadToImageHosting(selectedProductFiles[i]);
-        uploadedImageUrls.push(url);
+        submitBtn.textContent = `Processing image ${i + 1} of ${selectedProductFiles.length}...`;
+        const base64Url = await compressImage(selectedProductFiles[i]);
+        uploadedImageUrls.push(base64Url);
       }
 
       submitBtn.textContent = "Saving to Database...";
@@ -389,7 +385,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
         created_at: serverTimestamp()
       });
 
-      alert("Product successfully upload ho gaya!");
+      alert("Product successfully Firebase me save ho gaya!");
       productForm.reset();
       selectedProductFiles = [];
       productPreviewContainer.innerHTML = "";
@@ -397,7 +393,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
       alert("Product Upload Failed: " + error.message);
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Upload Product to 'products' Collection";
+      submitBtn.textContent = "Upload Product to Firebase";
     }
   });
 </script>
