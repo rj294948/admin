@@ -64,6 +64,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 </head>
 <body>
 
+<!-- Navigation Back to Home -->
 <a href="index.html" class="admin-link-btn">
   <i class="fas fa-home"></i> Back to Home
 </a>
@@ -71,9 +72,9 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 <section class="upload-section">
   <h1 class="section-title">Admin Management Panel</h1>
 
-  <!-- SECTION 1: HERO / TOP SHOWCASE BANNER UPLOADER -->
+  <!-- SECTION 1: HERO / TOP SHOWCASE BANNER UPLOADER (MULTI-IMAGE) -->
   <div class="upload-card">
-    <div class="card-subtitle"><i class="fas fa-image"></i> Upload Hero / Showcase Banner Images</div>
+    <div class="card-subtitle"><i class="fas fa-images"></i> Upload Hero / Showcase Banner Images (Multiple)</div>
     <form id="banner-form">
       <div class="form-grid">
         <div class="form-group full-width">
@@ -81,19 +82,19 @@ textarea.form-control { resize: vertical; min-height: 90px; }
           <input type="text" id="bannerTitle" class="form-control" value="Rajasthan Sandstone Hub - Premium Collection" required>
         </div>
         <div class="form-group full-width">
-          <label>Banner Image (Select or Capture Live Photo)</label>
+          <label>Banner Images (Select Multiple / Capture Live Photos)</label>
           <div class="media-options">
             <div class="media-box">
               <label for="bannerInput">
                 <i class="fas fa-images"></i>
-                <span>Select Banner File</span>
+                <span>Select Multiple Banners</span>
               </label>
-              <input type="file" id="bannerInput" accept="image/*" style="display:none;">
+              <input type="file" id="bannerInput" accept="image/*" multiple style="display:none;">
             </div>
             <div class="media-box">
               <label for="bannerInputCam">
                 <i class="fas fa-camera"></i>
-                <span>Capture Banner Photo</span>
+                <span>Capture Live Camera Photo</span>
               </label>
               <input type="file" id="bannerInputCam" accept="image/*" capture="environment" style="display:none;">
             </div>
@@ -101,7 +102,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
           <div class="preview-container" id="bannerPreviewContainer"></div>
         </div>
       </div>
-      <button type="submit" id="bannerBtn" class="btn-submit">Upload Banner to Firebase</button>
+      <button type="submit" id="bannerBtn" class="btn-submit">Upload Banners to Firebase</button>
     </form>
   </div>
 
@@ -110,83 +111,103 @@ textarea.form-control { resize: vertical; min-height: 90px; }
     <div class="card-subtitle"><i class="fas fa-boxes"></i> Upload Stone Products</div>
     <form id="product-form">
       <div class="form-grid">
+        
         <div class="form-group">
           <label>Stone Name</label>
           <input type="text" id="stone_name" class="form-control" value="Sandstone - Blasted Brushed" required>
         </div>
+
         <div class="form-group">
           <label>Category</label>
           <input type="text" id="category" class="form-control" value="Sand Stone" required>
         </div>
+
         <div class="form-group">
           <label>Sub Category</label>
           <input type="text" id="sub_category" class="form-control" value="Slabs / Tiles" required>
         </div>
+
         <div class="form-group">
           <label>Type</label>
           <input type="text" id="type" class="form-control" value="Natural" required>
         </div>
+
         <div class="form-group">
           <label>Finish</label>
           <input type="text" id="finish" class="form-control" value="Blasted Brushed" required>
         </div>
+
         <div class="form-group">
           <label>Color</label>
           <input type="text" id="color" class="form-control" value="Blasted Brushed" required>
         </div>
+
         <div class="form-group">
           <label>Price (₹)</label>
           <input type="number" id="price" class="form-control" value="98" required>
         </div>
+
         <div class="form-group">
           <label>Price Unit</label>
           <input type="text" id="price_unit" class="form-control" value="sqft" required>
         </div>
+
         <div class="form-group">
           <label>Size</label>
           <input type="text" id="size" class="form-control" value="Standard / Custom">
         </div>
+
         <div class="form-group">
           <label>Thickness</label>
           <input type="text" id="thickness" class="form-control" value="20-40 mm">
         </div>
+
         <div class="form-group">
           <label>Density</label>
           <input type="text" id="density" class="form-control" value="2.4 - 2.6 g/cm³">
         </div>
+
         <div class="form-group">
           <label>Compressive Strength</label>
           <input type="text" id="compressive_strength" class="form-control" value="1900 kg/cm²">
         </div>
+
         <div class="form-group">
           <label>Water Absorption</label>
           <input type="text" id="water_absorption" class="form-control" value="1.5 - 2.5%">
         </div>
+
         <div class="form-group">
           <label>Factory Name</label>
           <input type="text" id="factory_name" class="form-control" value="RJ Sand Stones">
         </div>
+
         <div class="form-group">
           <label>Contact Number</label>
           <input type="text" id="contact_number" class="form-control" value="+91 7737740207">
         </div>
+
         <div class="form-group">
           <label>Email</label>
           <input type="email" id="email" class="form-control" value="ravijain236129@gmail.com">
         </div>
+
         <div class="form-group full-width">
           <label>Address</label>
           <input type="text" id="address" class="form-control" value="NEAR MINING OFFICE , BIJOLIYA">
         </div>
+
         <div class="form-group full-width">
           <label>Usage / Applications</label>
           <input type="text" id="usage" class="form-control" value="Interior Feature Floors, Modern Patios, Walkways">
         </div>
+
         <div class="form-group full-width">
           <label>Description</label>
           <textarea id="description" class="form-control">Blasted and subsequently brushed to soften the textured feel while accentuating natural stone details.</textarea>
         </div>
 
+        <!-- PRODUCT IMAGES UPLOAD -->
         <div class="form-group full-width">
           <label>Product Images (Multiple Gallery / Live Camera)</label>
           <div class="media-options">
@@ -209,6 +230,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
         </div>
 
       </div>
+
       <button type="submit" id="submitBtn" class="btn-submit">Upload Product to Firebase</button>
     </form>
   </div>
@@ -217,7 +239,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 <script type="module">
   import { db, collection, addDoc, serverTimestamp } from "./firebase-config.js";
 
-  // Helper function to compress image and convert to Base64 so it fits easily in Firebase
+  // Helper function to compress image and convert to Base64
   function compressImage(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -247,7 +269,6 @@ textarea.form-control { resize: vertical; min-height: 90px; }
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
           
-          // Compress to JPEG with 0.7 quality
           const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
           resolve(dataUrl);
         };
@@ -259,58 +280,64 @@ textarea.form-control { resize: vertical; min-height: 90px; }
     });
   }
 
-  // --- 1. HERO BANNER UPLOAD LOGIC ---
+  // --- 1. HERO BANNER UPLOAD LOGIC (MULTI-IMAGE) ---
   const bannerForm = document.getElementById("banner-form");
   const bannerBtn = document.getElementById("bannerBtn");
   const bannerInput = document.getElementById("bannerInput");
   const bannerInputCam = document.getElementById("bannerInputCam");
   const bannerPreviewContainer = document.getElementById("bannerPreviewContainer");
-  let selectedBannerFile = null;
 
-  function handleBannerFile(file) {
-    selectedBannerFile = file;
-    bannerPreviewContainer.innerHTML = '';
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = document.createElement("img");
-      img.src = e.target.result;
-      img.className = "preview-thumb";
-      bannerPreviewContainer.appendChild(img);
-    };
-    reader.readAsDataURL(file);
+  let selectedBannerFiles = [];
+
+  function handleBannerFiles(files) {
+    for (let file of files) {
+      selectedBannerFiles.push(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.className = "preview-thumb";
+        bannerPreviewContainer.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
-  bannerInput.addEventListener("change", (e) => { if(e.target.files[0]) handleBannerFile(e.target.files[0]); });
-  bannerInputCam.addEventListener("change", (e) => { if(e.target.files[0]) handleBannerFile(e.target.files[0]); });
+  bannerInput.addEventListener("change", (e) => handleBannerFiles(e.target.files));
+  bannerInputCam.addEventListener("change", (e) => handleBannerFiles(e.target.files));
 
   bannerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (!selectedBannerFile) {
-      alert("Kripya banner ke liye ek image select ya capture karein!");
+    if (selectedBannerFiles.length === 0) {
+      alert("Kripya kam se kam ek banner image select ya capture karein!");
       return;
     }
 
     bannerBtn.disabled = true;
-    bannerBtn.textContent = "Processing & Saving Banner...";
 
     try {
-      const base64Image = await compressImage(selectedBannerFile);
+      const baseTitle = document.getElementById("bannerTitle").value.trim();
 
-      await addDoc(collection(db, "hero_images"), {
-        title: document.getElementById("bannerTitle").value.trim(),
-        imageUrl: base64Image,
-        created_at: serverTimestamp()
-      });
+      for (let i = 0; i < selectedBannerFiles.length; i++) {
+        bannerBtn.textContent = `Processing banner ${i + 1} of ${selectedBannerFiles.length}...`;
+        const base64Image = await compressImage(selectedBannerFiles[i]);
 
-      alert("Hero Banner successfully Firebase me save ho gaya!");
+        await addDoc(collection(db, "hero_images"), {
+          title: baseTitle,
+          imageUrl: base64Image,
+          created_at: serverTimestamp()
+        });
+      }
+
+      alert("Sabhi Hero Banners successfully Firebase me save ho gaye!");
       bannerForm.reset();
-      selectedBannerFile = null;
+      selectedBannerFiles = [];
       bannerPreviewContainer.innerHTML = "";
     } catch (error) {
       alert("Banner Upload Failed: " + error.message);
     } finally {
       bannerBtn.disabled = false;
-      bannerBtn.textContent = "Upload Banner to Firebase";
+      bannerBtn.textContent = "Upload Banners to Firebase";
     }
   });
 
