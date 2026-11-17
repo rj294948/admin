@@ -1,46 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Product Uploader - Rajasthan Sandstone Hub</title>
-  <style>
-    body { background: #0a0a0a; color: #fff; font-family: sans-serif; padding: 20px; }
-    .box { max-width: 500px; margin: 30px auto; background: #151515; padding: 25px; border-radius: 10px; border: 1px solid #222; }
-    h2 { color: #c7a97b; margin-bottom: 20px; text-align: center; }
-    input, select, textarea { width: 100%; padding: 10px; margin-bottom: 14px; background: #0d0d0d; border: 1px solid #333; color: #fff; border-radius: 6px; box-sizing: border-box; }
-    button { width: 100%; padding: 12px; background: #c7a97b; color: #000; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
-    button:disabled { opacity: 0.6; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Product Uploader - Rajasthan Sandstone Hub</title>
+<meta name="description" content="Upload and manage stone products for Rajasthan Sandstone Hub.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="icon" href="stone.png" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* ============================================================
+   VARIABLES
+   ============================================================ */
+:root {
+  --primary: #c7a97b;
+  --primary-dark: #a88958;
+  --bg-dark: #0a0a0a;
+  --bg-card: #151515;
+  --text-light: #ffffff;
+  --text-muted: #888888;
+  --border-color: #222222;
+  --transition: all 0.3s ease;
+  --font-head: 'Oswald', sans-serif;
+  --font-body: 'Montserrat', sans-serif;
+  --whatsapp: #25D366;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-light);
+  background: var(--bg-dark);
+  overflow-x: hidden;
+  font-size: 14px;
+  padding-bottom: 80px;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar-wrapper {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1000;
+}
+.nav-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  gap: 20px;
+  height: 76px;
+  max-width: 1700px;
+  margin: 0 auto;
+}
+.nav-brand {
+  font-family: var(--font-head);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.nav-brand span { color: var(--primary); }
+.nav-brand img { height: 38px; }
+
+/* ============================================================
+   UPLOAD FORM CONTAINER
+   ============================================================ */
+.upload-section {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.section-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.section-title {
+  font-size: 2rem;
+  font-family: var(--font-head);
+  color: white;
+  letter-spacing: 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 12px;
+}
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--primary);
+}
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.upload-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-family: var(--font-head);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  background: #0d0d0d;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: white;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(199,169,123,0.02);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+select.form-control {
+  cursor: pointer;
+}
+
+input[type="file"].form-control {
+  padding: 10px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: var(--primary);
+  color: #000;
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 10px;
+}
+
+.btn-submit:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  background: #000;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 60px;
+}
+footer .footer-brand {
+  color: white;
+  font-family: var(--font-head);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+footer .footer-brand span { color: var(--primary); }
+
+@media (max-width: 768px) {
+  .upload-section { padding: 0 12px; margin: 20px auto; }
+  .upload-card { padding: 24px 18px; }
+  .section-title { font-size: 1.5rem; }
+}
+</style>
 </head>
 <body>
 
-<div class="box">
-  <h2>Upload Stone Product</h2>
-  <form id="product-form">
-    <input type="password" id="adminKey" placeholder="Enter Secret Admin Key" required>
-    
-    <select id="category" required>
-      <option value="">Select Stone Category</option>
-      <option value="sandstone">Sandstone</option>
-      <option value="kota">Kota Stone</option>
-      <option value="granite">Granite</option>
-      <option value="marble">Marble</option>
-      <option value="dholpur">Dholpur</option>
-      <option value="tiles">Tiles</option>
-      <option value="mandana">Mandana</option>
-    </select>
-
-    <input type="text" id="name" placeholder="Stone Name (e.g., Bijoliya Red Sandstone)" required>
-    <input type="text" id="price" placeholder="Price (e.g., ₹45 / sq.ft)" required>
-    <input type="text" id="finish" placeholder="Finish (e.g., Natural, Honed, Polished)">
-    <textarea id="description" rows="3" placeholder="Stone Size, Thickness & Details"></textarea>
-    <input type="file" id="imageFile" accept="image/*" required>
-
-    <button type="submit" id="submitBtn">Upload Product</button>
-  </form>
+<!-- NAVBAR -->
+<div class="navbar-wrapper">
+  <div class="nav-row-top">
+    <a href="#" class="nav-brand">
+      <img src="stone.png" alt="Logo">
+      <span class="text">RAJASTHAN</span> <span>HUB</span>
+    </a>
+  </div>
 </div>
 
+<!-- UPLOAD SECTION -->
+<section class="upload-section">
+  <div class="section-header">
+    <h1 class="section-title">Product Uploader</h1>
+    <p class="section-subtitle">Add new stone listings to Rajasthan Sandstone Hub database</p>
+  </div>
+
+  <div class="upload-card">
+    <form id="product-form">
+      
+      <div class="form-group">
+        <label for="adminKey">Secret Admin Key</label>
+        <input type="password" id="adminKey" class="form-control" placeholder="Enter security PIN" required>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Stone Category</label>
+        <select id="category" class="form-control" required>
+          <option value="">Select Category</option>
+          <option value="sandstone">Sandstone</option>
+          <option value="kota">Kota Stone</option>
+          <option value="granite">Granite</option>
+          <option value="marble">Marble</option>
+          <option value="dholpur">Dholpur</option>
+          <option value="tiles">Tiles</option>
+          <option value="mandana">Mandana</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Product Name</label>
+        <input type="text" id="name" class="form-control" placeholder="e.g., Bijoliya Teak Sandstone" required>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price / Rate</label>
+        <input type="text" id="price" class="form-control" placeholder="e.g., ₹45 / sq.ft" required>
+      </div>
+
+      <div class="form-group">
+        <label for="finish">Surface Finish</label>
+        <input type="text" id="finish" class="form-control" placeholder="e.g., Natural, Honed, Polished, Calibrated">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Product Details & Specifications</label>
+        <textarea id="description" class="form-control" placeholder="Enter size, thickness, applications, and other details..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="imageFile">Product Image</label>
+        <input type="file" id="imageFile" class="form-control" accept="image/*" required>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn-submit">Upload Product</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">RAJASTHAN <span>HUB</span></div>
+  <div class="footer-copy">&copy; 2026 Rajasthan Sandstone Hub · All Rights Reserved</div>
+</footer>
+
+<!-- SCRIPT -->
 <script type="module">
   import { 
     auth, db, storage, 
@@ -52,13 +327,13 @@
   const form = document.getElementById("product-form");
   const submitBtn = document.getElementById("submitBtn");
 
-  // Background me silently anonymous session start karega (bina kisi login popup ke)
+  // Background anonymous auth sign-in
   signInAnonymously(auth).catch((err) => console.error("Auth error:", err));
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     submitBtn.disabled = true;
-    submitBtn.textContent = "Uploading...";
+    submitBtn.textContent = "Uploading Product...";
 
     try {
       const adminKey = document.getElementById("adminKey").value.trim();
@@ -69,14 +344,14 @@
       const description = document.getElementById("description").value.trim();
       const file = document.getElementById("imageFile").files[0];
 
-      // 1. Image ko Firebase Storage me upload karein
+      // 1. Upload image to Firebase Storage
       const storageRef = ref(storage, `products/${category}/${Date.now()}_${file.name}`);
       const snapshot = await uploadBytes(storageRef, file);
       const imageUrl = await getDownloadURL(snapshot.ref);
 
-      // 2. Product data ko Firestore me save karein
+      // 2. Save product metadata in Firestore
       await addDoc(collection(db, "products"), {
-        adminKey, // Security rule isi ko check karega
+        adminKey,
         category,
         name,
         price,
