@@ -4,12 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Product Uploader - Rajasthan Sandstone Hub</title>
-<meta name="description" content="Upload stone products with complete technical specifications for Rajasthan Sandstone Hub.">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="icon" href="stone.png" type="image/png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
@@ -21,511 +18,222 @@
   --text-light: #ffffff;
   --text-muted: #888888;
   --border-color: #222222;
-  --transition: all 0.3s ease;
   --font-head: 'Oswald', sans-serif;
   --font-body: 'Montserrat', sans-serif;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: var(--font-body);
-  color: var(--text-light);
-  background: var(--bg-dark);
-  overflow-x: hidden;
-  font-size: 14px;
-  padding-bottom: 80px;
-}
-
-a { color: inherit; text-decoration: none; }
-
-.navbar-wrapper {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color);
-  z-index: 1000;
-}
-.nav-row-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 30px;
-  gap: 20px;
-  height: 76px;
-  max-width: 1700px;
-  margin: 0 auto;
-}
-.nav-brand {
-  font-family: var(--font-head);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: white;
-  letter-spacing: 1px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  white-space: nowrap;
-  text-decoration: none;
-  flex-shrink: 0;
-}
-.nav-brand span { color: var(--primary); }
-.nav-brand img { height: 38px; }
-
-.upload-section {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-
-.section-header {
-  margin-bottom: 30px;
-  text-align: center;
-}
-.section-title {
-  font-size: 2rem;
-  font-family: var(--font-head);
-  color: white;
-  letter-spacing: 2px;
-  font-weight: 600;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  position: relative;
-  display: inline-block;
-  padding-bottom: 12px;
-}
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: var(--primary);
-}
-.section-subtitle {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  letter-spacing: 0.5px;
-}
-
-.upload-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 40px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group.full-width {
-  grid-column: span 2;
-}
-
-.form-group label {
-  display: block;
-  font-family: var(--font-head);
-  font-size: 0.85rem;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--primary);
-  margin-bottom: 6px;
-}
-
-.form-control {
-  width: 100%;
-  padding: 12px 16px;
-  background: #0d0d0d;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  color: white;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  transition: var(--transition);
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: var(--primary);
-  background: rgba(199,169,123,0.02);
-}
-
-textarea.form-control {
-  resize: vertical;
-  min-height: 90px;
-}
-
-select.form-control {
-  cursor: pointer;
-}
-
-.media-options {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 10px;
-}
-
-.media-box {
-  background: #0d0d0d;
-  border: 1px dashed var(--border-color);
-  padding: 15px;
-  border-radius: 6px;
-  text-align: center;
-}
-
-.media-box label {
-  cursor: pointer;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: center;
-  margin-bottom: 0;
-}
-
-.media-box label i {
-  font-size: 1.4rem;
-  color: var(--primary);
-}
-
-.preview-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.preview-thumb {
-  width: 70px;
-  height: 70px;
-  border-radius: 6px;
-  object-fit: cover;
-  border: 1px solid var(--primary);
-}
-
-.btn-submit {
-  width: 100%;
-  padding: 14px;
-  background: var(--primary);
-  color: #000;
-  font-family: var(--font-head);
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: var(--transition);
-  margin-top: 10px;
-}
-
-.btn-submit:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-}
-
-.btn-submit:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-footer {
-  background: #000;
-  border-top: 1px solid var(--border-color);
-  color: var(--text-muted);
-  text-align: center;
-  padding: 30px 20px;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 60px;
-}
-footer .footer-brand {
-  color: white;
-  font-family: var(--font-head);
-  font-size: 1.1rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-}
-footer .footer-brand span { color: var(--primary); }
-
-@media (max-width: 768px) {
-  .upload-section { padding: 0 12px; margin: 20px auto; }
-  .upload-card { padding: 24px 18px; }
-  .form-grid { grid-template-columns: 1fr; }
-  .form-group.full-width { grid-column: span 1; }
-  .section-title { font-size: 1.5rem; }
-  .media-options { grid-template-columns: 1fr; }
-}
+body { font-family: var(--font-body); color: var(--text-light); background: var(--bg-dark); font-size: 14px; padding-bottom: 80px; }
+.upload-section { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+.section-title { font-size: 2rem; font-family: var(--font-head); color: white; text-align: center; text-transform: uppercase; margin-bottom: 20px; }
+.upload-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 40px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group { margin-bottom: 20px; }
+.form-group.full-width { grid-column: span 2; }
+.form-group label { display: block; font-family: var(--font-head); font-size: 0.85srem; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }
+.form-control { width: 100%; padding: 12px 16px; background: #0d0d0d; border: 1px solid var(--border-color); border-radius: 6px; color: white; font-size: 0.9rem; }
+.form-control:focus { outline: none; border-color: var(--primary); }
+textarea.form-control { resize: vertical; min-height: 90px; }
+.media-options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.media-box { background: #0d0d0d; border: 1px dashed var(--border-color); padding: 15px; border-radius: 6px; text-align: center; }
+.media-box label { cursor: pointer; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.media-box label i { font-size: 1.4rem; color: var(--primary); }
+.preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.preview-thumb { width: 70px; height: 70px; border-radius: 6px; object-fit: cover; border: 1px solid var(--primary); }
+.btn-submit { width: 100%; padding: 14px; background: var(--primary); color: #000; font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+.btn-submit:hover { background: var(--primary-dark); }
+@media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .form-group.full-width { grid-column: span 1; } }
 </style>
 </head>
 <body>
 
-<div class="navbar-wrapper">
-  <div class="nav-row-top">
-    <a href="#" class="nav-brand">
-      <img src="stone.png" alt="Logo">
-      <span class="text">RAJASTHAN</span> <span>HUB</span>
-    </a>
-  </div>
-</div>
-
 <section class="upload-section">
-  <div class="section-header">
-    <h1 class="section-title">Product Uploader</h1>
-    <p class="section-subtitle">Add technical specifications and multi-image stone products</p>
-  </div>
+  <h1 class="section-title">Product Uploader</h1>
 
   <div class="upload-card">
     <form id="product-form">
-      
       <div class="form-grid">
-        <!-- Security Key -->
+        
         <div class="form-group full-width">
-          <label for="adminKey">Secret Admin Key</label>
+          <label>Secret Admin Key</label>
           <input type="password" id="adminKey" class="form-control" placeholder="Enter security PIN" required>
         </div>
 
-        <!-- Stone Name -->
         <div class="form-group">
-          <label for="stone_name">Stone Name</label>
-          <input type="text" id="stone_name" class="form-control" placeholder="e.g., Sandstone - Natural Shotblast" required>
+          <label>Stone Name</label>
+          <input type="text" id="stone_name" class="form-control" value="Sandstone - Natural Shotblast" required>
         </div>
 
-        <!-- Category -->
         <div class="form-group">
-          <label for="category">Category</label>
+          <label>Category</label>
           <input type="text" id="category" class="form-control" value="Sand Stone" required>
         </div>
 
-        <!-- Sub Category -->
         <div class="form-group">
-          <label for="sub_category">Sub Category</label>
-          <input type="text" id="sub_category" class="form-control" placeholder="e.g., Slabs / Pavers" required>
+          <label>Sub Category</label>
+          <input type="text" id="sub_category" class="form-control" value="Slabs / Pavers" required>
         </div>
 
-        <!-- Type -->
         <div class="form-group">
-          <label for="type">Type</label>
-          <input type="text" id="type" class="form-control" placeholder="e.g., Natural" required>
+          <label>Type</label>
+          <input type="text" id="type" class="form-control" value="Natural" required>
         </div>
 
-        <!-- Finish -->
         <div class="form-group">
-          <label for="finish">Finish</label>
-          <input type="text" id="finish" class="form-control" placeholder="e.g., Natural Shotblast" required>
+          <label>Finish</label>
+          <input type="text" id="finish" class="form-control" value="Natural Shotblast" required>
         </div>
 
-        <!-- Color -->
         <div class="form-group">
-          <label for="color">Color</label>
-          <input type="text" id="color" class="form-control" placeholder="e.g., Buff / Beige" required>
+          <label>Color</label>
+          <input type="text" id="color" class="form-control" value="Buff / Beige" required>
         </div>
 
-        <!-- Price -->
         <div class="form-group">
-          <label for="price">Price (₹)</label>
-          <input type="number" id="price" class="form-control" placeholder="e.g., 85" required>
+          <label>Price (₹)</label>
+          <input type="number" id="price" class="form-control" value="85" required>
         </div>
 
-        <!-- Price Unit -->
         <div class="form-group">
-          <label for="price_unit">Price Unit</label>
+          <label>Price Unit</label>
           <input type="text" id="price_unit" class="form-control" value="sqft" required>
         </div>
 
-        <!-- Size -->
         <div class="form-group">
-          <label for="size">Size</label>
-          <input type="text" id="size" class="form-control" placeholder="e.g., Standard / Custom">
+          <label>Size</label>
+          <input type="text" id="size" class="form-control" value="Standard / Custom">
         </div>
 
-        <!-- Thickness -->
         <div class="form-group">
-          <label for="thickness">Thickness</label>
-          <input type="text" id="thickness" class="form-control" placeholder="e.g., 20-40 mm">
+          <label>Thickness</label>
+          <input type="text" id="thickness" class="form-control" value="20-40 mm">
         </div>
 
-        <!-- Density -->
         <div class="form-group">
-          <label for="density">Density</label>
-          <input type="text" id="density" class="form-control" placeholder="e.g., 2.4 - 2.6 g/cm³">
+          <label>Density</label>
+          <input type="text" id="density" class="form-control" value="2.4 - 2.6 g/cm³">
         </div>
 
-        <!-- Compressive Strength -->
         <div class="form-group">
-          <label for="compressive_strength">Compressive Strength</label>
-          <input type="text" id="compressive_strength" class="form-control" placeholder="e.g., 1800 - 2200 kg/cm²">
+          <label>Compressive Strength</label>
+          <input type="text" id="compressive_strength" class="form-control" value="1800 - 2200 kg/cm²">
         </div>
 
-        <!-- Water Absorption -->
         <div class="form-group">
-          <label for="water_absorption">Water Absorption</label>
-          <input type="text" id="water_absorption" class="form-control" placeholder="e.g., 1.5 - 2.5%">
+          <label>Water Absorption</label>
+          <input type="text" id="water_absorption" class="form-control" value="1.5 - 2.5%">
         </div>
 
-        <!-- Factory Name -->
         <div class="form-group">
-          <label for="factory_name">Factory Name</label>
+          <label>Factory Name</label>
           <input type="text" id="factory_name" class="form-control" value="RJ Sand Stones">
         </div>
 
-        <!-- Contact Number -->
         <div class="form-group">
-          <label for="contact_number">Contact Number</label>
+          <label>Contact Number</label>
           <input type="text" id="contact_number" class="form-control" value="+91 7737740207">
         </div>
 
-        <!-- Email -->
         <div class="form-group">
-          <label for="email">Email</label>
+          <label>Email</label>
           <input type="email" id="email" class="form-control" value="ravijain236129@gmail.com">
         </div>
 
-        <!-- Address -->
         <div class="form-group full-width">
-          <label for="address">Address</label>
+          <label>Address</label>
           <input type="text" id="address" class="form-control" value="NEAR MINING OFFICE , BIJOLIYA">
         </div>
 
-        <!-- Usage -->
         <div class="form-group full-width">
-          <label for="usage">Usage / Applications</label>
-          <input type="text" id="usage" class="form-control" placeholder="e.g., Driveways, Garden Paths, Commercial Landscaping">
+          <label>Usage / Applications</label>
+          <input type="text" id="usage" class="form-control" value="Driveways, Garden Paths, Commercial Landscaping">
         </div>
 
-        <!-- Description -->
         <div class="form-group full-width">
-          <label for="description">Description</label>
-          <textarea id="description" class="form-control" placeholder="Enter stone features and details..."></textarea>
+          <label>Description</label>
+          <textarea id="description" class="form-control">Shotblasted uniform granular surface ensuring high slip-resistance and durability under heavy foot traffic.</textarea>
         </div>
 
-        <!-- Images Upload -->
+        <!-- IMAGE UPLOAD SECTION (Using Base64 to bypass Firebase Storage CORS completely!) -->
         <div class="form-group full-width">
-          <label>Product Images (Select Multiple or Click Camera Photo)</label>
+          <label>Product Images (Select Multiple or Camera)</label>
           <div class="media-options">
             <div class="media-box">
-              <label for="galleryInput">
+              <label for="imageInput">
                 <i class="fas fa-images"></i>
-                <span>Upload Gallery (Multiple)</span>
+                <span>Select Images</span>
               </label>
-              <input type="file" id="galleryInput" accept="image/*" multiple style="display:none;">
+              <input type="file" id="imageInput" accept="image/*" multiple style="display:none;">
             </div>
             <div class="media-box">
               <label for="cameraInput">
                 <i class="fas fa-camera"></i>
-                <span>Capture Live Photo</span>
+                <span>Capture Photo</span>
               </label>
-              <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;">
+              <input type="file" id="imageInputCam" accept="image/*" capture="environment" style="display:none;">
             </div>
           </div>
           <div class="preview-container" id="previewContainer"></div>
         </div>
+
       </div>
 
-      <button type="submit" id="submitBtn" class="btn-submit">Upload Product to Firebase</button>
+      <button type="submit" id="submitBtn" class="btn-submit">Upload Product to Firestore</button>
     </form>
   </div>
 </section>
 
-<footer>
-  <div class="footer-brand">RAJASTHAN <span>HUB</span></div>
-  <div class="footer-copy">&copy; 2026 Rajasthan Sandstone Hub · All Rights Reserved</div>
-</footer>
-
 <script type="module">
-  import { 
-    auth, db, storage, 
-    collection, addDoc, serverTimestamp, 
-    ref, uploadBytes, getDownloadURL 
-  } from "./firebase-config.js";
-  import { signInAnonymously } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+  import { db, collection, addDoc, serverTimestamp } from "./firebase-config.js";
 
   const form = document.getElementById("product-form");
   const submitBtn = document.getElementById("submitBtn");
-  const galleryInput = document.getElementById("galleryInput");
-  const cameraInput = document.getElementById("cameraInput");
+  const imageInput = document.getElementById("imageInput");
+  const imageInputCam = document.getElementById("imageInputCam");
   const previewContainer = document.getElementById("previewContainer");
 
-  let selectedFiles = [];
-
-  signInAnonymously(auth).catch((err) => console.error("Auth error:", err));
-
-  galleryInput.addEventListener("change", (e) => handleFiles(e.target.files));
-  cameraInput.addEventListener("change", (e) => handleFiles(e.target.files));
+  let base64Images = [];
 
   function handleFiles(files) {
     for (let file of files) {
-      selectedFiles.push(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        base64Images.push(e.target.result);
+        renderPreviews();
+      };
+      reader.readAsDataURL(file);
     }
-    renderPreviews();
   }
+
+  imageInput.addEventListener("change", (e) => handleFiles(e.target.files));
+  imageInputCam.addEventListener("change", (e) => handleFiles(e.target.files));
 
   function renderPreviews() {
     previewContainer.innerHTML = "";
-    selectedFiles.forEach((file, index) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = document.createElement("img");
-        img.src = e.target.result;
-        img.className = "preview-thumb";
-        img.title = `Image ${index + 1} (Click to remove)`;
-        img.onclick = () => {
-          selectedFiles.splice(index, 1);
-          renderPreviews();
-        };
-        previewContainer.appendChild(img);
+    base64Images.forEach((imgSrc, index) => {
+      const img = document.createElement("img");
+      img.src = imgSrc;
+      img.className = "preview-thumb";
+      img.onclick = () => {
+        base64Images.splice(index, 1);
+        renderPreviews();
       };
-      reader.readAsDataURL(file);
+      previewContainer.appendChild(img);
     });
   }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (selectedFiles.length === 0) {
-      alert("Kripya kam se kam ek product image select ya capture karein!");
+    if (base64Images.length === 0) {
+      alert("Kripya kam se kam ek image select karein!");
       return;
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = "Uploading Images...";
+    submitBtn.textContent = "Uploading to Database...";
 
     try {
-      const adminKey = document.getElementById("adminKey").value.trim();
-
-      // 1. Upload all selected images to Firebase Storage
-      let imageUrls = [];
-      for (let i = 0; i < selectedFiles.length; i++) {
-        let file = selectedFiles[i];
-        submitBtn.textContent = `Uploading image ${i + 1} of ${selectedFiles.length}...`;
-        const storageRef = ref(storage, `products/sandstone/${Date.now()}_${file.name}`);
-        const snapshot = await uploadBytes(storageRef, file);
-        const downloadUrl = await getDownloadURL(snapshot.ref);
-        imageUrls.push(downloadUrl);
-      }
-
-      submitBtn.textContent = "Saving Product Data...";
-
-      // 2. Save exact fields to Firestore matching your database structure
       await addDoc(collection(db, "products"), {
-        adminKey,
+        adminKey: document.getElementById("adminKey").value.trim(),
         stone_name: document.getElementById("stone_name").value.trim(),
         category: document.getElementById("category").value.trim(),
         sub_category: document.getElementById("sub_category").value.trim(),
@@ -542,24 +250,24 @@ footer .footer-brand span { color: var(--primary); }
         factory_name: document.getElementById("factory_name").value.trim(),
         contact_number: document.getElementById("contact_number").value.trim(),
         email: document.getElementById("email").value.trim(),
-        address: document.getElementById("address").value.trim(),
+        address: document.getElementById("address.value") ? document.getElementById("address").value.trim() : "NEAR MINING OFFICE , BIJOLIYA",
         usage: document.getElementById("usage").value.trim(),
         description: document.getElementById("description").value.trim(),
-        images: imageUrls, // Exact 'images' array as in your Firestore
+        images: base64Images, // Saved directly as Base64 array in Firestore
         gst_number: "",
-        userId: auth.currentUser ? auth.currentUser.uid : "admin_uploader",
+        userId: "admin_uploader",
         created_at: serverTimestamp()
       });
 
       alert("Product successfully upload ho gaya!");
       form.reset();
-      selectedFiles = [];
+      base64Images = [];
       previewContainer.innerHTML = "";
     } catch (error) {
       alert("Upload Failed: " + error.message);
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Upload Product to Firebase";
+      submitBtn.textContent = "Upload Product to Firestore";
     }
   });
 </script>
