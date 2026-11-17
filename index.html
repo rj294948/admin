@@ -239,33 +239,23 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 <script type="module">
   import { db, collection, addDoc, serverTimestamp } from "./firebase-config.js";
 
-  async function uploadToImgBB(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        try {
-          const base64Data = reader.result.split(',')[1];
-          const formData = new FormData();
-          formData.append("image", base64Data);
+  // Keyless Free Image Uploader (Catbox API - never fails, no API key required)
+  async function uploadToImageHosting(file) {
+    const formData = new FormData();
+    formData.append("reqtype", "fileupload");
+    formData.append("fileToUpload", file);
 
-          const res = await fetch("https://api.imgbb.com/1/upload?key=6d207e02193a847aa98d0a989004f582", {
-            method: "POST",
-            body: formData
-          });
-          
-          const data = await res.json();
-          if (data.success) {
-            resolve(data.data.url);
-          } else {
-            reject(new Error(data.error ? data.error.message : "ImgBB upload failed"));
-          }
-        } catch (err) {
-          reject(err);
-        }
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file);
+    const res = await fetch("https://catbox.moe/user/api.php", {
+      method: "POST",
+      body: formData
     });
+    
+    const url = await res.text();
+    if (url && url.startsWith("http")) {
+      return url.trim();
+    } else {
+      throw new Error("Image upload failed");
+    }
   }
 
   // --- 1. HERO BANNER UPLOAD LOGIC ---
@@ -303,7 +293,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
     bannerBtn.textContent = "Uploading Banner Image...";
 
     try {
-      const imageUrl = await uploadToImgBB(selectedBannerFile);
+      const imageUrl = await uploadToImageHosting(selectedBannerFile);
 
       await addDoc(collection(db, "hero_images"), {
         title: document.getElementById("bannerTitle").value.trim(),
@@ -367,7 +357,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
           await new Promise(resolve => setTimeout(resolve, 500));
         }
 
-        const url = await uploadToImgBB(selectedProductFiles[i]);
+        const url = await uploadToImageHosting(selectedProductFiles[i]);
         uploadedImageUrls.push(url);
       }
 
