@@ -3,240 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin & Banner Uploader - Rajasthan Sandstone Hub</title>
+<title>Quick Image Link Generator - Rajasthan Sandstone Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
 :root {
   --primary: #c7a97b;
-  --primary-dark: #a88958;
   --bg-dark: #0a0a0a;
   --bg-card: #151515;
   --text-light: #ffffff;
-  --text-muted: #888888;
   --border-color: #222222;
   --font-head: 'Oswald', sans-serif;
   --font-body: 'Montserrat', sans-serif;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: var(--font-body); color: var(--text-light); background: var(--bg-dark); font-size: 14px; padding-bottom: 80px; }
-.upload-section { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-.section-title { font-size: 2rem; font-family: var(--font-head); color: white; text-align: center; text-transform: uppercase; margin-bottom: 20px; }
-.upload-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 40px; margin-bottom: 30px; }
-.card-subtitle { font-family: var(--font-head); font-size: 1.2rem; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-.form-group { margin-bottom: 20px; }
-.form-group.full-width { grid-column: span 2; }
-.form-group label { display: block; font-family: var(--font-head); font-size: 0.85rem; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; }
-.form-control { width: 100%; padding: 12px 16px; background: #0d0d0d; border: 1px solid var(--border-color); border-radius: 6px; color: white; font-size: 0.9rem; }
-.form-control:focus { outline: none; border-color: var(--primary); }
-textarea.form-control { resize: vertical; min-height: 90px; }
-.media-box { background: #0d0d0d; border: 1px dashed var(--border-color); padding: 20px; border-radius: 6px; text-align: center; }
-.media-box label { cursor: pointer; color: var(--text-muted); display: flex; flex-direction: column; gap: 6px; align-items: center; }
-.media-box label i { font-size: 1.6rem; color: var(--primary); }
-.preview-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
-.preview-thumb { width: 80px; height: 80px; border-radius: 6px; object-fit: cover; border: 1px solid var(--primary); }
-.btn-submit { width: 100%; padding: 14px; background: var(--primary); color: #000; font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
-.btn-submit:hover { background: var(--primary-dark); }
-@media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .form-group.full-width { grid-column: span 1; } }
+body { font-family: var(--font-body); color: var(--text-light); background: var(--bg-dark); padding: 20px; }
+.container { max-width: 600px; margin: 40px auto; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 30px; }
+h1 { font-family: var(--font-head); color: var(--primary); font-size: 1.8rem; text-align: center; margin-bottom: 20px; text-transform: uppercase; }
+.upload-box { border: 2px dashed var(--border-color); padding: 30px; text-align: center; border-radius: 6px; cursor: pointer; margin-bottom: 20px; background: #0d0d0d; }
+.upload-box i { font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; }
+.upload-box span { display: block; color: #888; font-size: 0.9rem; }
+.btn { width: 100%; padding: 14px; background: var(--primary); color: #000; font-family: var(--font-head); font-weight: 600; border: none; border-radius: 6px; cursor: pointer; text-transform: uppercase; font-size: 1rem; transition: background 0.3s; }
+.btn:hover { background: #b09367; }
+.result-box { margin-top: 20px; background: #0d0d0d; padding: 15px; border-radius: 6px; display: none; border: 1px solid var(--border-color); }
+.result-box input { width: 100%; padding: 10px; background: #1a1a1a; border: 1px solid var(--border-color); color: #fff; border-radius: 4px; margin-top: 5px; font-size: 0.9rem; }
+.preview { width: 100%; max-height: 220px; object-fit: cover; border-radius: 6px; margin-top: 15px; display: none; border: 1px solid var(--primary); }
+.back-btn { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; color: var(--primary); text-decoration: none; font-family: var(--font-head); text-transform: uppercase; font-size: 0.85rem; border: 1px solid var(--primary); padding: 8px 16px; border-radius: 4px; }
+.back-btn:hover { background: var(--primary); color: #000; }
 </style>
 </head>
 <body>
 
-<section class="upload-section">
-  <h1 class="section-title">Admin Control Panel</h1>
+<a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
 
-  <!-- SECTION 1: HERO / TOP BANNER IMAGES UPLOADER -->
-  <div class="upload-card">
-    <div class="card-subtitle"><i class="fas fa-image"></i> Upload Top / Hero Showcase Images</div>
-    <form id="banner-form">
-      <div class="form-grid">
-        <div class="form-group full-width">
-          <label>Banner Title / Caption (Optional)</label>
-          <input type="text" id="bannerTitle" class="form-control" placeholder="e.g., Premium Sandstone Display">
-        </div>
+<div class="container">
+  <h1>Hero Image Link Generator</h1>
+  <form id="uploadForm">
+    <div class="upload-box" onclick="document.getElementById('imageFile').click()">
+      <i class="fas fa-camera-retro"></i>
+      <span>Click to Select Image or Capture Live Photo</span>
+      <input type="file" id="imageFile" accept="image/*" capture="environment" style="display:none;" required>
+    </div>
+    
+    <img id="imagePreview" class="preview">
+    
+    <button type="submit" id="uploadBtn" class="btn" style="margin-top:20px;">Upload & Generate Link</button>
+  </form>
 
-        <div class="form-group full-width">
-          <label>Select Banner Image</label>
-          <div class="media-box">
-            <label for="bannerInput">
-              <i class="fas fa-cloud-upload-alt"></i>
-              <span>Choose High-Quality Showcase Image</span>
-            </label>
-            <input type="file" id="bannerInput" accept="image/*" style="display:none;" required>
-          </div>
-          <div class="preview-container" id="bannerPreview"></div>
-        </div>
-      </div>
-      <button type="submit" id="bannerBtn" class="btn-submit">Upload Banner to 'hero_images' Collection</button>
-    </form>
+  <div class="result-box" id="resultBox">
+    <label style="color: var(--primary); font-family: var(--font-head); text-transform: uppercase; font-size: 0.85rem;">Generated Image Link (Saved in Firebase):</label>
+    <input type="text" id="linkOutput" readonly onclick="this.select()">
   </div>
-
-  <!-- SECTION 2: PRODUCTS UPLOADER -->
-  <div class="upload-card">
-    <div class="card-subtitle"><i class="fas fa-boxes"></i> Upload Stone Products</div>
-    <form id="product-form">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Stone Name</label>
-          <input type="text" id="stone_name" class="form-control" value="Sandstone - Natural Shotblast" required>
-        </div>
-        <div class="form-group">
-          <label>Category</label>
-          <input type="text" id="category" class="form-control" value="Sand Stone" required>
-        </div>
-        <div class="form-group">
-          <label>Price (₹)</label>
-          <input type="number" id="price" class="form-control" value="85" required>
-        </div>
-        <div class="form-group">
-          <label>Price Unit</label>
-          <input type="text" id="price_unit" class="form-control" value="sqft" required>
-        </div>
-        <div class="form-group full-width">
-          <label>Product Images (Multiple)</label>
-          <div class="media-box">
-            <label for="imageInput">
-              <i class="fas fa-images"></i>
-              <span>Select Product Gallery Images</span>
-            </label>
-            <input type="file" id="imageInput" accept="image/*" multiple style="display:none;">
-          </div>
-          <div class="preview-container" id="previewContainer"></div>
-        </div>
-      </div>
-      <button type="submit" id="submitBtn" class="btn-submit">Upload Product to 'products' Collection</button>
-    </form>
-  </div>
-</section>
+</div>
 
 <script type="module">
   import { db, collection, addDoc, serverTimestamp } from "./firebase-config.js";
 
-  // --- 1. HERO BANNER UPLOAD SCRIPT ---
-  const bannerForm = document.getElementById("banner-form");
-  const bannerBtn = document.getElementById("bannerBtn");
-  const bannerInput = document.getElementById("bannerInput");
-  const bannerPreview = document.getElementById("bannerPreview");
-  let selectedBannerFile = null;
+  const fileInput = document.getElementById('imageFile');
+  const preview = document.getElementById('imagePreview');
+  const form = document.getElementById('uploadForm');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const resultBox = document.getElementById('resultBox');
+  const linkOutput = document.getElementById('linkOutput');
 
-  bannerInput.addEventListener("change", (e) => {
-    selectedBannerFile = e.target.files[0];
-    if (selectedBannerFile) {
+  let selectedFile = null;
+
+  fileInput.addEventListener('change', (e) => {
+    selectedFile = e.target.files[0];
+    if (selectedFile) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        bannerPreview.innerHTML = `<img src="${event.target.result}" class="preview-thumb">`;
+        preview.src = event.target.result;
+        preview.style.display = 'block';
       };
-      reader.readAsDataURL(selectedBannerFile);
+      reader.readAsDataURL(selectedFile);
     }
   });
 
-  async function uploadToImgBB(file) {
-    const formData = new FormData();
-    formData.append("image", file);
-    const res = await fetch("https://api.imgbb.com/1/upload?key=6d207e02193a847aa98d0a989004f582", {
-      method: "POST",
-      body: formData
-    });
-    const data = await res.json();
-    if (data.success) return data.data.url;
-    else throw new Error("Image upload failed");
-  }
-
-  bannerForm.addEventListener("submit", async (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!selectedBannerFile) {
-      alert("Kripya ek banner image select karein!");
+    if (!selectedFile) {
+      alert('Kripya pehle image select karein!');
       return;
     }
 
-    bannerBtn.disabled = true;
-    bannerBtn.textContent = "Uploading Banner Image...";
+    uploadBtn.disabled = true;
+    uploadBtn.textContent = 'Uploading Image...';
 
     try {
-      const imageUrl = await uploadToImgBB(selectedBannerFile);
-
-      // Save to new collection 'hero_images' in Firestore
-      await addDoc(collection(db, "hero_images"), {
-        title: document.getElementById("bannerTitle").value.trim() || "Showcase Banner",
-        imageUrl: imageUrl,
-        created_at: serverTimestamp()
-      });
-
-      alert("Hero Banner successfully 'hero_images' collection me upload ho gaya!");
-      bannerForm.reset();
-      selectedBannerFile = null;
-      bannerPreview.innerHTML = "";
-    } catch (error) {
-      alert("Banner Upload Failed: " + error.message);
-    } finally {
-      bannerBtn.disabled = false;
-      bannerBtn.textContent = "Upload Banner to 'hero_images' Collection";
-    }
-  });
-
-  // --- 2. PRODUCT UPLOAD SCRIPT ---
-  const productForm = document.getElementById("product-form");
-  const submitBtn = document.getElementById("submitBtn");
-  const imageInput = document.getElementById("imageInput");
-  const previewContainer = document.getElementById("previewContainer");
-  let productFiles = [];
-
-  imageInput.addEventListener("change", (e) => {
-    for (let file of e.target.files) {
-      productFiles.push(file);
       const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = document.createElement("img");
-        img.src = event.target.result;
-        img.className = "preview-thumb";
-        previewContainer.appendChild(img);
+      reader.onload = async () => {
+        const base64Data = reader.result.split(',')[1];
+        const formData = new FormData();
+        formData.append("image", base64Data);
+
+        const res = await fetch("https://api.imgbb.com/1/upload?key=6d207e02193a847aa98d0a989004f582", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          const imageUrl = data.data.url;
+
+          // Save link directly to Firebase 'hero_images' collection
+          await addDoc(collection(db, "hero_images"), {
+            imageUrl: imageUrl,
+            created_at: serverTimestamp()
+          });
+
+          linkOutput.value = imageUrl;
+          resultBox.style.display = 'block';
+          alert('Image successfully upload ho gayi aur link generate ho gaya!');
+        } else {
+          throw new Error(data.error ? data.error.message : "Upload failed");
+        }
       };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  productForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (productFiles.length === 0) {
-      alert("Kripya kam se kam ek product image select karein!");
-      return;
-    }
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Uploading Product Images...";
-
-    try {
-      let imageUrls = [];
-      for (let i = 0; i < productFiles.length; i++) {
-        submitBtn.textContent = `Uploading image ${i + 1} of ${productFiles.length}...`;
-        const url = await uploadToImgBB(productFiles[i]);
-        imageUrls.push(url);
-      }
-
-      submitBtn.textContent = "Saving Product Data...";
-
-      await addDoc(collection(db, "products"), {
-        stone_name: document.getElementById("stone_name").value.trim(),
-        category: document.getElementById("category").value.trim(),
-        price: Number(document.getElementById("price").value),
-        price_unit: document.getElementById("price_unit").value.trim(),
-        images: imageUrls,
-        created_at: serverTimestamp()
-      });
-
-      alert("Product successfully upload ho gaya!");
-      productForm.reset();
-      productFiles = [];
-      previewContainer.innerHTML = "";
+      reader.readAsDataURL(selectedFile);
     } catch (error) {
-      alert("Product Upload Failed: " + error.message);
+      alert("Error: " + error.message);
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Upload Product to 'products' Collection";
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = 'Upload & Generate Link';
     }
   });
 </script>
