@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Product Uploader - Rajasthan Sandstone Hub</title>
-<meta name="description" content="Upload and manage stone products with multi-image & camera support for Rajasthan Sandstone Hub.">
+<meta name="description" content="Upload stone products with complete technical specifications for Rajasthan Sandstone Hub.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,7 +76,7 @@ a { color: inherit; text-decoration: none; }
 .nav-brand img { height: 38px; }
 
 .upload-section {
-  max-width: 800px;
+  max-width: 900px;
   margin: 40px auto;
   padding: 0 20px;
 }
@@ -118,22 +118,30 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--border-color);
   border-radius: 10px;
   padding: 40px;
-  position: relative;
-  overflow: hidden;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
 .form-group {
   margin-bottom: 20px;
 }
 
+.form-group.full-width {
+  grid-column: span 2;
+}
+
 .form-group label {
   display: block;
   font-family: var(--font-head);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--primary);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .form-control {
@@ -156,7 +164,7 @@ a { color: inherit; text-decoration: none; }
 
 textarea.form-control {
   resize: vertical;
-  min-height: 100px;
+  min-height: 90px;
 }
 
 select.form-control {
@@ -186,6 +194,7 @@ select.form-control {
   flex-direction: column;
   gap: 6px;
   align-items: center;
+  margin-bottom: 0;
 }
 
 .media-box label i {
@@ -260,6 +269,8 @@ footer .footer-brand span { color: var(--primary); }
 @media (max-width: 768px) {
   .upload-section { padding: 0 12px; margin: 20px auto; }
   .upload-card { padding: 24px 18px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .form-group.full-width { grid-column: span 1; }
   .section-title { font-size: 1.5rem; }
   .media-options { grid-template-columns: 1fr; }
 }
@@ -279,80 +290,157 @@ footer .footer-brand span { color: var(--primary); }
 <section class="upload-section">
   <div class="section-header">
     <h1 class="section-title">Product Uploader</h1>
-    <p class="section-subtitle">Multi-image & camera enabled stone product uploader</p>
+    <p class="section-subtitle">Add technical specifications and multi-image stone products</p>
   </div>
 
   <div class="upload-card">
     <form id="product-form">
       
-      <div class="form-group">
-        <label for="adminKey">Secret Admin Key</label>
-        <input type="password" id="adminKey" class="form-control" placeholder="Enter security PIN" required>
-      </div>
-
-      <div class="form-group">
-        <label for="category">Stone Category</label>
-        <select id="category" class="form-control" required>
-          <option value="">Select Category</option>
-          <option value="sandstone">Sandstone</option>
-          <option value="kota">Kota Stone</option>
-          <option value="granite">Granite</option>
-          <option value="marble">Marble</option>
-          <option value="dholpur">Dholpur</option>
-          <option value="tiles">Tiles</option>
-          <option value="mandana">Mandana</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="name">Product Name</label>
-        <input type="text" id="name" class="form-control" placeholder="e.g., Bijoliya Teak Sandstone" required>
-      </div>
-
-      <div class="form-group">
-        <label for="price">Price / Rate</label>
-        <input type="text" id="price" class="form-control" placeholder="e.g., ₹45 / sq.ft" required>
-      </div>
-
-      <div class="form-group">
-        <label for="finish">Surface Finish</label>
-        <input type="text" id="finish" class="form-control" placeholder="e.g., Natural, Honed, Polished, Calibrated">
-      </div>
-
-      <div class="form-group">
-        <label for="description">Product Details & Specifications</label>
-        <textarea id="description" class="form-control" placeholder="Enter size, thickness, applications, and other details..."></textarea>
-      </div>
-
-      <!-- MULTI-IMAGE & CAMERA UPLOAD SECTION -->
-      <div class="form-group">
-        <label>Product Images (Select Multiple or Click Photo)</label>
-        
-        <div class="media-options">
-          <!-- Gallery Multi-select -->
-          <div class="media-box">
-            <label for="galleryInput">
-              <i class="fas fa-images"></i>
-              <span>Upload from Gallery (Multiple)</span>
-            </label>
-            <input type="file" id="galleryInput" accept="image/*" multiple style="display:none;">
-          </div>
-
-          <!-- Direct Camera Capture -->
-          <div class="media-box">
-            <label for="cameraInput">
-              <i class="fas fa-camera"></i>
-              <span>Capture Live Photo</span>
-            </label>
-            <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;">
-          </div>
+      <div class="form-grid">
+        <!-- Security Key -->
+        <div class="form-group full-width">
+          <label for="adminKey">Secret Admin Key</label>
+          <input type="password" id="adminKey" class="form-control" placeholder="Enter security PIN" required>
         </div>
 
-        <!-- Image Preview Container -->
-        <div class="preview-container" id="previewContainer"></div>
+        <!-- Stone Name -->
+        <div class="form-group">
+          <label for="stone_name">Stone Name</label>
+          <input type="text" id="stone_name" class="form-control" placeholder="e.g., Sandstone - Natural Shotblast" required>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label for="category">Category</label>
+          <input type="text" id="category" class="form-control" value="Sand Stone" required>
+        </div>
+
+        <!-- Sub Category -->
+        <div class="form-group">
+          <label for="sub_category">Sub Category</label>
+          <input type="text" id="sub_category" class="form-control" placeholder="e.g., Slabs / Pavers" required>
+        </div>
+
+        <!-- Type -->
+        <div class="form-group">
+          <label for="type">Type</label>
+          <input type="text" id="type" class="form-control" placeholder="e.g., Natural" required>
+        </div>
+
+        <!-- Finish -->
+        <div class="form-group">
+          <label for="finish">Finish</label>
+          <input type="text" id="finish" class="form-control" placeholder="e.g., Natural Shotblast" required>
+        </div>
+
+        <!-- Color -->
+        <div class="form-group">
+          <label for="color">Color</label>
+          <input type="text" id="color" class="form-control" placeholder="e.g., Buff / Beige" required>
+        </div>
+
+        <!-- Price -->
+        <div class="form-group">
+          <label for="price">Price (₹)</label>
+          <input type="number" id="price" class="form-control" placeholder="e.g., 85" required>
+        </div>
+
+        <!-- Price Unit -->
+        <div class="form-group">
+          <label for="price_unit">Price Unit</label>
+          <input type="text" id="price_unit" class="form-control" value="sqft" required>
+        </div>
+
+        <!-- Size -->
+        <div class="form-group">
+          <label for="size">Size</label>
+          <input type="text" id="size" class="form-control" placeholder="e.g., Standard / Custom">
+        </div>
+
+        <!-- Thickness -->
+        <div class="form-group">
+          <label for="thickness">Thickness</label>
+          <input type="text" id="thickness" class="form-control" placeholder="e.g., 20-40 mm">
+        </div>
+
+        <!-- Density -->
+        <div class="form-group">
+          <label for="density">Density</label>
+          <input type="text" id="density" class="form-control" placeholder="e.g., 2.4 - 2.6 g/cm³">
+        </div>
+
+        <!-- Compressive Strength -->
+        <div class="form-group">
+          <label for="compressive_strength">Compressive Strength</label>
+          <input type="text" id="compressive_strength" class="form-control" placeholder="e.g., 1800 - 2200 kg/cm²">
+        </div>
+
+        <!-- Water Absorption -->
+        <div class="form-group">
+          <label for="water_absorption">Water Absorption</label>
+          <input type="text" id="water_absorption" class="form-control" placeholder="e.g., 1.5 - 2.5%">
+        </div>
+
+        <!-- Factory Name -->
+        <div class="form-group">
+          <label for="factory_name">Factory Name</label>
+          <input type="text" id="factory_name" class="form-control" value="RJ Sand Stones">
+        </div>
+
+        <!-- Contact Number -->
+        <div class="form-group">
+          <label for="contact_number">Contact Number</label>
+          <input type="text" id="contact_number" class="form-control" value="+91 7737740207">
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" class="form-control" value="ravijain236129@gmail.com">
+        </div>
+
+        <!-- Address -->
+        <div class="form-group full-width">
+          <label for="address">Address</label>
+          <input type="text" id="address" class="form-control" value="NEAR MINING OFFICE , BIJOLIYA">
+        </div>
+
+        <!-- Usage -->
+        <div class="form-group full-width">
+          <label for="usage">Usage / Applications</label>
+          <input type="text" id="usage" class="form-control" placeholder="e.g., Driveways, Garden Paths, Commercial Landscaping">
+        </div>
+
+        <!-- Description -->
+        <div class="form-group full-width">
+          <label for="description">Description</label>
+          <textarea id="description" class="form-control" placeholder="Enter stone features and details..."></textarea>
+        </div>
+
+        <!-- Images Upload -->
+        <div class="form-group full-width">
+          <label>Product Images (Select Multiple or Click Camera Photo)</label>
+          <div class="media-options">
+            <div class="media-box">
+              <label for="galleryInput">
+                <i class="fas fa-images"></i>
+                <span>Upload Gallery (Multiple)</span>
+              </label>
+              <input type="file" id="galleryInput" accept="image/*" multiple style="display:none;">
+            </div>
+            <div class="media-box">
+              <label for="cameraInput">
+                <i class="fas fa-camera"></i>
+                <span>Capture Live Photo</span>
+              </label>
+              <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none;">
+            </div>
+          </div>
+          <div class="preview-container" id="previewContainer"></div>
+        </div>
       </div>
 
-      <button type="submit" id="submitBtn" class="btn-submit">Upload Product</button>
+      <button type="submit" id="submitBtn" class="btn-submit">Upload Product to Firebase</button>
     </form>
   </div>
 </section>
@@ -378,18 +466,10 @@ footer .footer-brand span { color: var(--primary); }
 
   let selectedFiles = [];
 
-  // Background anonymous auth sign-in
   signInAnonymously(auth).catch((err) => console.error("Auth error:", err));
 
-  // Handle Gallery (Multiple) Selection
-  galleryInput.addEventListener("change", (e) => {
-    handleFiles(e.target.files);
-  });
-
-  // Handle Camera Capture
-  cameraInput.addEventListener("change", (e) => {
-    handleFiles(e.target.files);
-  });
+  galleryInput.addEventListener("change", (e) => handleFiles(e.target.files));
+  cameraInput.addEventListener("change", (e) => handleFiles(e.target.files));
 
   function handleFiles(files) {
     for (let file of files) {
@@ -425,43 +505,53 @@ footer .footer-brand span { color: var(--primary); }
     }
 
     submitBtn.disabled = true;
-    submitBtn.textContent = "Uploading Images & Product...";
+    submitBtn.textContent = "Uploading Images...";
 
     try {
       const adminKey = document.getElementById("adminKey").value.trim();
-      const category = document.getElementById("category").value;
-      const name = document.getElementById("name").value.trim();
-      const price = document.getElementById("price").value.trim();
-      const finish = document.getElementById("finish").value.trim();
-      const description = document.getElementById("description").value.trim();
 
       // 1. Upload all selected images to Firebase Storage
       let imageUrls = [];
       for (let i = 0; i < selectedFiles.length; i++) {
         let file = selectedFiles[i];
         submitBtn.textContent = `Uploading image ${i + 1} of ${selectedFiles.length}...`;
-        const storageRef = ref(storage, `products/${category}/${Date.now()}_${file.name}`);
+        const storageRef = ref(storage, `products/sandstone/${Date.now()}_${file.name}`);
         const snapshot = await uploadBytes(storageRef, file);
         const downloadUrl = await getDownloadURL(snapshot.ref);
         imageUrls.push(downloadUrl);
       }
 
-      submitBtn.textContent = "Saving to Database...";
+      submitBtn.textContent = "Saving Product Data...";
 
-      // 2. Save product metadata in Firestore (with imageUrls array and first image as main imageUrl)
+      // 2. Save exact fields to Firestore matching your database structure
       await addDoc(collection(db, "products"), {
         adminKey,
-        category,
-        name,
-        price,
-        finish,
-        description,
-        imageUrl: imageUrls[0], // Main image for backward compatibility
-        imageUrls: imageUrls,   // Array of all uploaded images
-        createdAt: serverTimestamp()
+        stone_name: document.getElementById("stone_name").value.trim(),
+        category: document.getElementById("category").value.trim(),
+        sub_category: document.getElementById("sub_category").value.trim(),
+        type: document.getElementById("type").value.trim(),
+        finish: document.getElementById("finish").value.trim(),
+        color: document.getElementById("color").value.trim(),
+        price: Number(document.getElementById("price").value),
+        price_unit: document.getElementById("price_unit").value.trim(),
+        size: document.getElementById("size").value.trim(),
+        thickness: document.getElementById("thickness").value.trim(),
+        density: document.getElementById("density").value.trim(),
+        compressive_strength: document.getElementById("compressive_strength").value.trim(),
+        water_absorption: document.getElementById("water_absorption").value.trim(),
+        factory_name: document.getElementById("factory_name").value.trim(),
+        contact_number: document.getElementById("contact_number").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        address: document.getElementById("address").value.trim(),
+        usage: document.getElementById("usage").value.trim(),
+        description: document.getElementById("description").value.trim(),
+        images: imageUrls, // Exact 'images' array as in your Firestore
+        gst_number: "",
+        userId: auth.currentUser ? auth.currentUser.uid : "admin_uploader",
+        created_at: serverTimestamp()
       });
 
-      alert("Product aur sabhi images successfully upload ho gayi!");
+      alert("Product successfully upload ho gaya!");
       form.reset();
       selectedFiles = [];
       previewContainer.innerHTML = "";
@@ -469,7 +559,7 @@ footer .footer-brand span { color: var(--primary); }
       alert("Upload Failed: " + error.message);
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Upload Product";
+      submitBtn.textContent = "Upload Product to Firebase";
     }
   });
 </script>
