@@ -239,7 +239,7 @@ textarea.form-control { resize: vertical; min-height: 90px; }
 <script type="module">
   import { db, collection, addDoc, serverTimestamp } from "./firebase-config.js";
 
-  // Helper function to compress image and convert to Base64
+  // Optimized Helper function to highly compress image and convert to lightweight Base64
   function compressImage(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -247,8 +247,8 @@ textarea.form-control { resize: vertical; min-height: 90px; }
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 1000;
-          const MAX_HEIGHT = 1000;
+          const MAX_WIDTH = 500;   // Optimized down from 1000 to 500px for speed
+          const MAX_HEIGHT = 500;  // Optimized down from 1000 to 500px for speed
           let width = img.width;
           let height = img.height;
 
@@ -269,7 +269,8 @@ textarea.form-control { resize: vertical; min-height: 90px; }
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
           
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          // Compressed quality set to 0.5 for lightweight Firestore payloads & ultra-fast loading
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
           resolve(dataUrl);
         };
         img.onerror = (err) => reject(err);
